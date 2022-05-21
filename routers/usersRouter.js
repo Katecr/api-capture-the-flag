@@ -2,43 +2,64 @@ const express = require("express");
 
 
 const serviceUser = require("./../services/userService");
+const validatorUser = require("./../middlewares/validatorHandler");
+const { createUserSchema, updateUserSchema, getUserSchema } = require("./../schemas/userSchema");
+
+
 const router = express.Router();
 const service = new serviceUser();
 
 
 /*******endpoint/route all user (GET)********/
-router.get('/', (req, res) =>{
-  const users = service.find();
+router.get('/', async(req, res) =>{
+  const users = await service.find();
   res.status(200).json(users);
 });
 
 /*******endpoint/route detail user (GET)********/
-router.get('/:idUser', (req, res) =>{
-  // We obtain the idUser of the url with destructuring
-  const { idUser } = req.params;
-  const user = service.findOne(idUser);
-  res.status(200).json(user);
+router.get('/:idUser',
+  validatorUser(getUserSchema,'params'),
+  async(req, res, next) =>{
+    try {
+      // We obtain the idUser of the url with destructuring
+      const { idUser } = req.params;
+      const user = await service.findOne(idUser);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
 });
 
 /*******endpoint/route create user (POST)********/
-router.post('/', (req, res) => {
+router.post('/',
+validatorUser(createUserSchema,'body'),
+async(req, res) => {
   const body = req.body;
-  const newUser = service.create(body)
+  const newUser = await service.create(body)
   res.status(201).json(newUser);
 })
 
 /*******endpoint/route update partial user (PATCH)********/
-router.patch('/:idUser', (req, res) => {
-  const {idUser } = req.params;
-  const body = req.body;
-  const userUpdate = service.update(idUser, body);
-  res.status(202).json(userUpdate);
+router.patch('/:idUser',
+validatorUser(getUserSchema,'params'),
+validatorUser(updateUserSchema,'body'),
+async(req, res, next) => {
+  try {
+    const {idUser } = req.params;
+    const body = req.body;
+    const userUpdate = await service.update(idUser, body);
+    res.status(202).json(userUpdate);
+  } catch (error) {
+    next(error);
+  }
 })
 
 /*******endpoint/route delete user (DELETE)********/
-router.delete('/:idUser', (req, res) => {
+router.delete('/:idUser',
+validatorUser(getUserSchema,'params'),
+async(req, res) => {
   const {idUser } = req.params;
-  const responseDelete = service.update(idUser);
+  const responseDelete = await service.update(idUser);
   res.status(200).json(responseDelete);
 })
 

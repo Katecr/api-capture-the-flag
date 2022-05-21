@@ -1,4 +1,8 @@
+//library to enter false data
 const faker = require('@faker-js/faker');
+
+//error capturing library
+const boom = require('@hapi/boom');
 
 class UsersService {
 
@@ -16,13 +20,13 @@ class UsersService {
         lastname: faker.name.lastName(),
         email: faker.internet.email(),
         password: null,
-        role: 'user',
+        role: 'player',
         avatar: faker.image.avatar()
       });
     }
   }
 
-  create(data){
+  async create(data){
     const newUser = {
       id: faker.datatype.uuid(),
       // express operator
@@ -32,18 +36,22 @@ class UsersService {
     return newUser;
   }
 
-  find(){
+  async find(){
     return this.users;
   }
 
-  findOne(idUser){
-    return this.users.find(user => user.id === idUser);
+  async findOne(idUser){
+    const user = this.users.find(user => user.id === idUser);
+    if(!user){
+      throw boom.notFound('user not found');
+    }
+    return user;
   }
 
-  update(idUser, changes){
+  async update(idUser, changes){
     const index = this.users.findIndex(user => user.id === idUser);
     if(index === -1){
-      throw new Error('user not found');
+      throw boom.notFound('user not found');
     }
     const userCurrent =  this.users[index];
     this.users[index] = {
@@ -53,10 +61,10 @@ class UsersService {
     return this.users[index];
   }
 
-  delete(idUser){
+  async delete(idUser){
     const index = this.users.findIndex(user => user.id === idUser);
     if(index === -1){
-      throw new Error('user not found');
+      throw boom.notFound('user not found');
     }
     this.users.splice(index, 1);
     return {
