@@ -1,24 +1,14 @@
 const express = require("express");
+
+
+const serviceUser = require("./../services/userService");
 const router = express.Router();
+const service = new serviceUser();
 
 
 /*******endpoint/route all user (GET)********/
 router.get('/', (req, res) =>{
-  const users = [];
-  // We obtain the size of the query by destructuring
-  const { size } = req.query;
-  const limit = size || 10;
-  for (let i = 0; i < limit; i++) {
-    users.push({
-      id: i,
-      name: faker.name.findName(),
-      lastname: faker.name.lastName(),
-      email: faker.internet.email(),
-      password: null,
-      role: 'user',
-      avatar: faker.image.avatar()
-    });
-  }
+  const users = service.find();
   res.status(200).json(users);
 });
 
@@ -26,49 +16,30 @@ router.get('/', (req, res) =>{
 router.get('/:idUser', (req, res) =>{
   // We obtain the idUser of the url with destructuring
   const { idUser } = req.params;
-  //
-  if(idUser === '999'){
-    res.status(404).json({
-      message: 'not found'
-    });
-  }else{
-    res.status(200).json([
-      {
-        idUser,
-        user:'user1',
-        password:'123456'
-      }
-    ]);
-  }
+  const user = service.findOne(idUser);
+  res.status(200).json(user);
 });
 
 /*******endpoint/route create user (POST)********/
 router.post('/', (req, res) => {
   const body = req.body;
-  res.status(201).json({
-    message: 'created',
-    data: body
-  });
+  const newUser = service.create(body)
+  res.status(201).json(newUser);
 })
 
 /*******endpoint/route update partial user (PATCH)********/
 router.patch('/:idUser', (req, res) => {
   const {idUser } = req.params;
   const body = req.body;
-  res.status(202).json({
-    message: 'Updated',
-    data: body,
-    idUser
-  });
+  const userUpdate = service.update(idUser, body);
+  res.status(202).json(userUpdate);
 })
 
 /*******endpoint/route delete user (DELETE)********/
 router.delete('/:idUser', (req, res) => {
   const {idUser } = req.params;
-  res.status(200).json({
-    message: 'deleted',
-    idUser
-  });
+  const responseDelete = service.update(idUser);
+  res.status(200).json(responseDelete);
 })
 
 

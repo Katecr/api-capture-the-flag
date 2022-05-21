@@ -1,6 +1,6 @@
 const faker = require('@faker-js/faker');
 
-class UserService {
+class UsersService {
 
   constructor(){
     this.users = [];
@@ -22,8 +22,14 @@ class UserService {
     }
   }
 
-  create(){
-
+  create(data){
+    const newUser = {
+      id: faker.datatype.uuid(),
+      // express operator
+      ...data
+    }
+    this.users.push(newUser);
+    return newUser;
   }
 
   find(){
@@ -34,13 +40,30 @@ class UserService {
     return this.users.find(user => user.id === idUser);
   }
 
-  update(){
-
+  update(idUser, changes){
+    const index = this.users.findIndex(user => user.id === idUser);
+    if(index === -1){
+      throw new Error('user not found');
+    }
+    const userCurrent =  this.users[index];
+    this.users[index] = {
+      ...userCurrent,
+      ...changes
+    };
+    return this.users[index];
   }
 
-  delete(){
-
+  delete(idUser){
+    const index = this.users.findIndex(user => user.id === idUser);
+    if(index === -1){
+      throw new Error('user not found');
+    }
+    this.users.splice(index, 1);
+    return {
+      idUser
+    }
   }
 }
 
-module.export = UserService;
+module.exports = UsersService;
+
