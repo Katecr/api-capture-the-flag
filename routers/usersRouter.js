@@ -23,13 +23,13 @@ router.get('/', async(req, res, next) =>{
 });
 
 /*******endpoint/route detail user (GET)********/
-router.get('/:idUser',
+router.get('/:id',
   validatorUser(getUserSchema,'params'),
   async(req, res, next) =>{
     try {
-      // We obtain the idUser of the url with destructuring
-      const { idUser } = req.params;
-      const user = await service.findOne(idUser);
+      // We obtain the id of the url with destructuring
+      const { id } = req.params;
+      const user = await service.findOne(id);
       res.status(200).json(user);
     } catch (error) {
       next(error);
@@ -50,14 +50,14 @@ async(req, res,next) => {
 })
 
 /*******endpoint/route update partial user (PATCH)********/
-router.patch('/:idUser',
+router.patch('/:id',
 validatorUser(getUserSchema,'params'),
 validatorUser(updateUserSchema,'body'),
 async(req, res, next) => {
   try {
-    const {idUser } = req.params;
+    const {id } = req.params;
     const body = req.body;
-    const userUpdate = await service.update(idUser, body);
+    const userUpdate = await service.update(id, body);
     res.status(202).json(userUpdate);
   } catch (error) {
     next(error);
@@ -65,12 +65,12 @@ async(req, res, next) => {
 })
 
 /*******endpoint/route delete user (DELETE)********/
-router.delete('/:idUser',
+router.delete('/:id',
 validatorUser(getUserSchema,'params'),
 async(req, res, next) => {
   try {
-    const {idUser } = req.params;
-    const responseDelete = await service.delete(idUser);
+    const {id } = req.params;
+    const responseDelete = await service.delete(id);
     res.status(200).json(responseDelete);
   } catch (error) {
     next(error);
