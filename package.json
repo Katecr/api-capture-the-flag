@@ -20,16 +20,15 @@
   },
   "homepage": "https://github.com/Katecr/api-capture-the-flag#readme",
   "devDependencies": {
-    "@faker-js/faker": "^5.5.3",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "faker": "^5.5.3",
     "nodemon": "^2.0.16",
     "prettier": "^2.6.2"
   },
   "dependencies": {
     "@faker-js/faker": "^5.5.3",
+    "faker": "^5.5.3",
     "@hapi/boom": "^10.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.1",
