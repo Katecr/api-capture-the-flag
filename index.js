@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; //assign port if it comes from an environment variable otherwise assign 3000
 
 /**********middleware to receive json*************/
 app.use(express.json());
