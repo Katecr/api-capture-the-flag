@@ -1,8 +1,10 @@
 const express = require("express");
 
-
+/******* require service where the business logic lies *******/
 const serviceUser = require("./../services/userService");
+/******* require data validator *******/
 const validatorUser = require("./../middlewares/validatorHandler");
+/******* require user data schemas *******/
 const { createUserSchema, updateUserSchema, getUserSchema } = require("./../schemas/userSchema");
 
 
@@ -11,9 +13,13 @@ const service = new serviceUser();
 
 
 /*******endpoint/route all user (GET)********/
-router.get('/', async(req, res) =>{
-  const users = await service.find();
-  res.status(200).json(users);
+router.get('/', async(req, res, next) =>{
+  try {
+    const users = await service.find();
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
 });
 
 /*******endpoint/route detail user (GET)********/
@@ -33,10 +39,14 @@ router.get('/:idUser',
 /*******endpoint/route create user (POST)********/
 router.post('/',
 validatorUser(createUserSchema,'body'),
-async(req, res) => {
-  const body = req.body;
-  const newUser = await service.create(body)
-  res.status(201).json(newUser);
+async(req, res,next) => {
+  try {
+    const body = req.body;
+    const newUser = await service.create(body)
+    res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
 })
 
 /*******endpoint/route update partial user (PATCH)********/
@@ -57,28 +67,16 @@ async(req, res, next) => {
 /*******endpoint/route delete user (DELETE)********/
 router.delete('/:idUser',
 validatorUser(getUserSchema,'params'),
-async(req, res) => {
-  const {idUser } = req.params;
-  const responseDelete = await service.update(idUser);
-  res.status(200).json(responseDelete);
+async(req, res, next) => {
+  try {
+    const {idUser } = req.params;
+    const responseDelete = await service.delete(idUser);
+    res.status(200).json(responseDelete);
+  } catch (error) {
+    next(error);
+  }
+
 })
-
-
-
-
-/*******endpoint/route missions for user (GET)********/
-router.get('/api/users/:idUser/missions', (req, res) =>{
-  // Obtenemos el idUser de la url con destructuración
-  const { idUser } = req.params;
-  res.json([
-    {
-      idUser,
-      missionName:'Misión 1',
-      state:'completed'
-    }
-  ]);
-});
-
 
 
 module.exports = router;
