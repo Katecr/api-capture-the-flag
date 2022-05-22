@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+/**********middleware to receive json*************/
+app.use(express.json());
+
 /**********require cors (to validate connection from other sources)*************/
 const cors = require('cors');
 
@@ -18,8 +21,7 @@ const options = {
 }
 app.use(cors(options));
 
-/**********middleware to receive json*************/
-app.use(express.json());
+
 
 
 /**********import middleware errors*************/
