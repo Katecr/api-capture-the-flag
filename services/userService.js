@@ -19,9 +19,9 @@ class UsersService {
         name: faker.name.findName(),
         lastname: faker.name.lastName(),
         email: faker.internet.email(),
-        password: null,
+        password: '5765b9119834c0b14193f792ce86d0ff',
         role: 'player',
-        avatar: faker.image.avatar()
+        avatar: 'https://ui-avatars.com/api/?name=capture+flag'
       });
     }
   }

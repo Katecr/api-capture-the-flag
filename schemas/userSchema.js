@@ -6,7 +6,7 @@ const id = Joi.string().uuid();
 const name = Joi.string().min(3);
 const lastname = Joi.string().min(3);
 const email= Joi.string().email();
-const password= Joi.string().min(6).max(12);
+const password= Joi.string();
 const role = Joi.string().min(4).max(5);
 const avatar = Joi.string().uri();
 
