@@ -30,7 +30,9 @@ class UsersService {
     const newUser = {
       id: faker.datatype.uuid(),
       // express operator
-      ...data
+      ...data,
+      role: 'player',
+      avatar: 'https://ui-avatars.com/api/?name=capture+flag'
     }
     this.users.push(newUser);
     return newUser;
